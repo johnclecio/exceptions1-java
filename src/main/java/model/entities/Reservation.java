@@ -1,6 +1,8 @@
 package model.entities;
 
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.concurrent.TimeUnit;
 
@@ -38,9 +40,26 @@ public class Reservation {
         long  diff = checkOut.getTime() - checkIn.getTime();
         return TimeUnit.DAYS.convert(diff, TimeUnit.MILLISECONDS);
     }
-    public void updateDates(Date checkIn, Date checkOut){
+    public String updateDates(Date checkIn, Date checkOut) {
+        // Simula que hoje é 20/09/2019
+        Date now;
+        try {
+            now = sdf.parse("20/09/2019");
+        } catch (ParseException e) {
+            now = new Date();
+        }
+
+        if (stripTime(checkIn).before(stripTime(now)) || stripTime(checkOut).before(stripTime(now))) {
+            return "Reservation dates for update must be future dates";
+        }
+
+        if (!checkOut.after(checkIn)) {
+            return "Check-out date must be after check-in date";
+        }
+
         this.checkIn = checkIn;
         this.checkOut = checkOut;
+        return null;
     }
 
     @Override
@@ -55,6 +74,16 @@ public class Reservation {
                 + duration()
                 + " nights";
     }
+    private Date stripTime(Date date) {
+        Calendar cal = Calendar.getInstance();
+        cal.setTime(date);
+        cal.set(Calendar.HOUR_OF_DAY, 0);
+        cal.set(Calendar.MINUTE, 0);
+        cal.set(Calendar.SECOND, 0);
+        cal.set(Calendar.MILLISECOND, 0);
+        return cal.getTime();
+    }
+
 
 
 }

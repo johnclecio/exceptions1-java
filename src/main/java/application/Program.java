@@ -33,36 +33,26 @@ public class Program {
             System.out.println("Enter data to update the reservation:");
 
             System.out.print("Check-in date (dd/MM/yyyy): ");
-            Date newCheckIn = sdf.parse(sc.next());
+            checkIn = sdf.parse(sc.next());
 
             System.out.print("Check-out date (dd/MM/yyyy): ");
-            Date newCheckOut = sdf.parse(sc.next());
+            checkOut = sdf.parse(sc.next());
 
-            Date truncatedOriginalCheckIn = truncateTime(reservation.getCheckIn());
-            Date truncatedNewCheckIn = truncateTime(newCheckIn);
-            Date truncatedNewCheckOut = truncateTime(newCheckOut);
 
-            if (truncatedNewCheckIn.before(truncatedOriginalCheckIn)) {
-                System.out.println("Error in reservation: Reservation dates for update must be future dates");
-            } else if (!truncatedNewCheckOut.after(truncatedNewCheckIn)) {
-                System.out.println("Error in reservation: Check-out date must be after check-in date");
-            } else {
-                reservation.updateDates(newCheckIn, newCheckOut);
-                System.out.println("Reservation: " + reservation);
+            String error =   reservation.updateDates(checkIn, checkOut);
+            if (error != null){
+                System.out.println("Error in reservation: " + error);
             }
+            else {
+                System.out.println("Reservation: " + reservation);
+
+            }
+
         }
 
         sc.close();
     }
 
-    public static Date truncateTime(Date date) {
-        Calendar cal = Calendar.getInstance();
-        cal.setTime(date);
-        cal.set(Calendar.HOUR_OF_DAY, 0);
-        cal.set(Calendar.MINUTE, 0);
-        cal.set(Calendar.SECOND, 0);
-        cal.set(Calendar.MILLISECOND, 0);
-        return cal.getTime();
-    }
- //John
+
+
 }
