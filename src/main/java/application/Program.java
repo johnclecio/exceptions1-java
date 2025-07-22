@@ -64,5 +64,5 @@ public class Program {
         cal.set(Calendar.MILLISECOND, 0);
         return cal.getTime();
     }
-    
+ //John
 }
